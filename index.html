@@ -1,25 +1,89 @@
-<!DOCTYPE html>
-<html>
+<script>
+let data = [];
 
-<head>
-    <title>Daily Activity Tracker</title>
-</head>
+// ⚠️ TARUH API KEY LO DISINI (RISIKO BESAR)
+const API_KEY = "ISI_API_KEY_LO_DISINI";
 
-<body>
+function render() {
+  let total = 0;
+  let text = "";
 
-    <h2>Daily Activity Tracker</h2>
+  data.forEach((d, i) => {
+    total += d.m;
+    text += (i+1) + ". " + d.a + " - " + d.m + " menit\n";
+  });
 
-    <input type="text" id="activity" placeholder="contoh: belajar">
-    <input type="number" id="duration" placeholder="durasi (menit)">
-    <button id="addBtn">Tambah</button>
+  document.getElementById("total").innerText =
+    "Total: " + total + " menit";
 
-    <p id="total">Total: 0 menit (0 aktivitas)</p>
+  document.getElementById("list").innerText =
+    text || "Belum ada data";
+}
 
-    <ol id="list"></ol>
-    <script src="storage.js"></script>
-    <script src="dom.js"></script>
-    <script src="app.js"></script>
+function tambah() {
+  const a = document.getElementById("act").value;
+  const m = Number(document.getElementById("min").value);
 
-</body>
+  if (!a || !m) return alert("Isi data dengan benar");
 
-</html>
+  data.push({ a, m });
+
+  document.getElementById("act").value = "";
+  document.getElementById("min").value = "";
+
+  render();
+}
+
+async function analisis() {
+  if (data.length === 0) return;
+
+  document.getElementById("result").innerText = "Menganalisis...";
+
+  // 🔥 lebih structured
+  const total = data.reduce((sum, d) => sum + d.m, 0);
+
+  const daftar = data.map((d, i) =>
+    `${i+1}. ${d.a} - ${d.m} menit`
+  ).join("\n");
+
+  const prompt = `
+Kamu adalah productivity coach yang kritis.
+
+Data aktivitas:
+${daftar}
+
+Total waktu: ${total} menit
+
+Tugas kamu:
+1. Hitung estimasi waktu produktif vs tidak produktif
+2. Berikan analisis tajam (jangan normatif)
+3. Berikan saran konkret yang bisa langsung dilakukan
+`;
+
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+
+    const json = await res.json();
+
+    document.getElementById("result").innerText =
+      json.choices?.[0]?.message?.content || "Error dari AI";
+
+  } catch (err) {
+    document.getElementById("result").innerText = "Gagal koneksi ke AI";
+  }
+}
+
+render();
+</script>
