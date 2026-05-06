@@ -1,25 +1,43 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Daily Activity Tracker</title>
+  <meta charset="utf-8">
+  <title>Student Productivity Analyzer</title>
+  <style>
+    body { font-family: Arial; margin: 24px; max-width: 700px; }
+    input, button { padding: 8px; margin: 4px; }
+    #list, #result, #imageStatus {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-top: 10px;
+      white-space: pre-line;
+    }
+  </style>
 </head>
-
 <body>
 
-    <h2>Daily Activity Tracker</h2>
+<h2>Student Productivity Analyzer</h2>
+<p>Masukkan aktivitas harian untuk dianalisis oleh AI.</p>
 
-    <input type="text" id="activity" placeholder="contoh: belajar">
-    <input type="number" id="duration" placeholder="durasi (menit)">
-    <button id="addBtn">Tambah</button>
+<input id="act" placeholder="contoh: belajar, game">
+<input id="min" type="number" placeholder="menit">
 
-    <p id="total">Total: 0 menit (0 aktivitas)</p>
+<button id="addBtn">Tambah</button>
+<button id="analysisBtn">Analisis AI</button>
 
-    <ol id="list"></ol>
-    <script src="storage.js"></script>
-    <script src="dom.js"></script>
-    <script src="app.js"></script>
+<p id="total">Total: 0 menit</p>
 
+<h3>Aktivitas:</h3>
+<div id="list">Belum ada data</div>
+
+<h3>Analisis AI:</h3>
+<div id="result">Belum dianalisis</div>
+
+<h3>Generate Karakter Sesuai Aktivitas:</h3>
+<button id="generateBtn">Generate Gambar</button>
+<div id="imageStatus">Belum ada gambar.</div>
+<img id="aiImage" style="max-width:300px;margin-top:12px;display:none;">
+
+<script src="app.js"></script>
 </body>
-
 </html>
