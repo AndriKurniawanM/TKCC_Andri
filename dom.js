@@ -1,21 +1,37 @@
-const activityInput = document.getElementById("activity");
-const durationInput = document.getElementById("duration");
-const addBtn = document.getElementById("addBtn");
-const list = document.getElementById("list");
-const totalText = document.getElementById("total");
+function renderActivities(data) {
+  let total = 0;
+  let text = "";
 
-function renderList(activities) {
-    list.innerHTML = "";
+  data.forEach((d, i) => {
+    total += d.minutes;
+    text += (i + 1) + ". " + d.activity + " - " + d.minutes + " menit\n";
+  });
 
-    activities.forEach((item, index) => {
-        const li = document.createElement("li");
-        li.textContent = `${item.name} — ${item.duration} menit`;
+  document.getElementById("total").innerText =
+    "Total: " + total + " menit";
 
-        list.appendChild(li);
-    });
+  document.getElementById("list").innerText =
+    text || "Belum ada data";
 }
 
-function renderTotal(activities) {
-    const total = activities.reduce((sum, item) => sum + item.duration, 0);
-    totalText.textContent = `Total: ${total} menit (${activities.length} aktivitas)`;
+function showAnalysis(text) {
+  document.getElementById("result").innerText = text;
+}
+
+function showImageLoading() {
+  document.getElementById("imageStatus").innerText = "Membuat gambar...";
+  document.getElementById("aiImage").style.display = "none";
+}
+
+function showImage(base64) {
+  const img = document.getElementById("aiImage");
+  img.src = "data:image/png;base64," + base64;
+  img.style.display = "block";
+
+  document.getElementById("imageStatus").innerText =
+    "Gambar berhasil dibuat";
+}
+
+function showError(id, msg) {
+  document.getElementById(id).innerText = msg;
 }
