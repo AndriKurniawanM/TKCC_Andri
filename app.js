@@ -1,4 +1,4 @@
-const API_BASE = "https://activity-ai-backend.vercel.app";
+const API_BASE = "https://activity-ai-backend1-qvtj.vercel.app";
 
 document.getElementById("addBtn").addEventListener("click", () => {
   const a = document.getElementById("act").value.trim();
